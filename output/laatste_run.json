@@ -1,0 +1,38 @@
+{
+  "tijdstip": "2026-10-28T07:02:54",
+  "van": "2026-10-26",
+  "tot": "2026-10-28",
+  "bronnen": {
+    "ted": {
+      "ok": true,
+      "aantal": 1749
+    },
+    "tenderned": {
+      "ok": true,
+      "aantal": 187
+    },
+    "boamp": {
+      "ok": true,
+      "aantal": 420
+    },
+    "pmp_lu": {
+      "ok": true,
+      "aantal": 5
+    },
+    "coming_up": {
+      "ok": true,
+      "aantal": 345
+    }
+  },
+  "nieuw": 83,
+  "nieuw_per_profiel": {
+    "niet_gegund": 22,
+    "eenmalige_levering": 28,
+    "betalingen_incasso": 3,
+    "it_diensten": 19,
+    "consultancy": 9,
+    "algemeen_drukwerk": 6,
+    "ux_design": 1,
+    "transactioneel_drukwerk": 1
+  }
+}

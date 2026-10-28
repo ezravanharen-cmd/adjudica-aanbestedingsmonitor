@@ -1,0 +1,49 @@
+name: Aanbestedingsmonitor
+
+on:
+  schedule:
+    # werkdagen 05:53 UTC = 06:53 (winter) / 07:53 (zomer) Belgische tijd
+    - cron: "53 4 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      dagen:
+        description: "Aantal dagen terugkijken (leeg = sinds laatste run)"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monitor
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Monitor uitvoeren
+        run: |
+          if [ -n "${{ github.event.inputs.dagen }}" ]; then
+            python monitor.py --geen-melding --dagen "${{ github.event.inputs.dagen }}"
+          else
+            python monitor.py --geen-melding
+          fi
+      - name: Resultaten bewaren
+        run: |
+          git config user.name "aanbestedingsmonitor"
+          git config user.email "aanbestedingsmonitor@users.noreply.github.com"
+          git add data/aanbestedingen.db output/data.json output/laatste_run.json
+          git commit -m "Run $(date -u +%Y-%m-%d)" || echo "Geen wijzigingen"
+          git push
+      - name: Logboek
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logboek
+          path: logs/
+          retention-days: 14

@@ -1,0 +1,489 @@
+{
+  "_uitleg": "Pas profielen aan naar wens. cpv = CPV-prefixen (bv. '798' matcht alle codes die met 798 beginnen). trefwoorden matchen op hele woorden in titel+beschrijving (NL/FR/EN), accentongevoelig; een '*' achteraan = woordbegin (bv. 'deurwaarder*'). Korte woorden in HOOFDLETTERS (AI, UX, PSP) matchen hoofdlettergevoelig. uitsluiten = trefwoorden die een match ongedaan maken.",
+  "landen": [
+    "BEL",
+    "NLD",
+    "LUX",
+    "FRA"
+  ],
+  "bronnen": {
+    "ted": true,
+    "tenderned": true,
+    "boamp": true,
+    "pmp_lu": true
+  },
+  "eerste_run_dagen_terug": 7,
+  "dashboard_dagen_bewaren": 60,
+  "macos_melding": true,
+  "luiken": [
+    {
+      "id": "documenten",
+      "naam": "Drukwerk, documentcommunicatie & betalingen"
+    },
+    {
+      "id": "it",
+      "naam": "IT, consultancy, UX & AI"
+    },
+    {
+      "id": "leveringen",
+      "naam": "Eenmalige leveringen (off-the-shelf)"
+    },
+    {
+      "id": "niet_gegund",
+      "naam": "Niet-gegunde aanbestedingen"
+    }
+  ],
+  "profielen": [
+    {
+      "id": "transactioneel_drukwerk",
+      "naam": "Transactioneel drukwerk & hybride post",
+      "luik": "documenten",
+      "soort": [
+        "oproep"
+      ],
+      "cpv": [
+        "79823",
+        "79824",
+        "79571",
+        "6411",
+        "64121100",
+        "72512",
+        "79999100",
+        "79995100",
+        "79996100"
+      ],
+      "trefwoorden": [
+        "transactioneel drukwerk",
+        "transactionele documenten",
+        "transactionele communicatie",
+        "hybride post",
+        "hybride mail",
+        "printen en versturen",
+        "printen en verzenden",
+        "drukken en verzenden",
+        "print & mail",
+        "print en mail",
+        "uitgaande post",
+        "uitgaande briefwisseling",
+        "outputmanagement",
+        "output management",
+        "documentcommunicatie",
+        "klantcommunicatie",
+        "massamailing",
+        "enveloppering",
+        "couverteren",
+        "kuverteren",
+        "postverwerking",
+        "e-facturatie",
+        "elektronische facturatie",
+        "digitale facturatie",
+        "Peppol",
+        "eBox",
+        "Doccle",
+        "Zoomit",
+        "éditique",
+        "editique",
+        "courrier hybride",
+        "impression et mise sous pli",
+        "mise sous pli",
+        "impression et envoi",
+        "impression et expédition",
+        "routage",
+        "courriers sortants",
+        "gestion du courrier",
+        "facturation électronique",
+        "dématérialisation des factures",
+        "transactional print",
+        "transactional printing",
+        "print and mail",
+        "hybrid mail",
+        "customer communication management",
+        "CCM",
+        "e-invoicing",
+        "outbound mail"
+      ],
+      "uitsluiten": [
+        "impression 3D",
+        "3D-print*",
+        "3D print*",
+        "imprimante*",
+        "printers"
+      ]
+    },
+    {
+      "id": "betalingen_incasso",
+      "naam": "Betalingen & betalingsopvolging (incasso)",
+      "luik": "documenten",
+      "soort": [
+        "oproep"
+      ],
+      "cpv": [
+        "79940000",
+        "66172",
+        "66171"
+      ],
+      "trefwoorden": [
+        "incasso",
+        "incassodiensten",
+        "invordering",
+        "minnelijke invordering",
+        "schuldinvordering",
+        "debiteurenbeheer",
+        "betalingsopvolging",
+        "betalingsherinnering*",
+        "aanmaning*",
+        "deurwaarder*",
+        "gerechtsdeurwaarder*",
+        "domiciliëring",
+        "betaaloplossing*",
+        "betaalplatform",
+        "betaaldienst*",
+        "online betalen",
+        "betaalterminal*",
+        "elektronisch betalen",
+        "recouvrement de créances",
+        "recouvrement des créances",
+        "recouvrement des impayés",
+        "recouvrement amiable",
+        "gestion des impayés",
+        "impayés",
+        "lettres de relance",
+        "relances de paiement",
+        "huissier*",
+        "prélèvement automatique",
+        "solution de paiement",
+        "solutions de paiement",
+        "plateforme de paiement",
+        "terminaux de paiement",
+        "terminal de paiement",
+        "monétique",
+        "encaissement",
+        "paiement en ligne",
+        "debt collection",
+        "collection agency",
+        "payment services",
+        "payment service provider",
+        "payment platform",
+        "PSP",
+        "dunning"
+      ],
+      "uitsluiten": [
+        "péage",
+        "tolheffing",
+        "toll"
+      ]
+    },
+    {
+      "id": "algemeen_drukwerk",
+      "naam": "Algemeen drukwerk",
+      "luik": "documenten",
+      "soort": [
+        "oproep"
+      ],
+      "cpv": [
+        "22",
+        "79810",
+        "79811",
+        "79800000",
+        "79820",
+        "79821"
+      ],
+      "trefwoorden": [
+        "drukwerk",
+        "drukwerken",
+        "drukken van",
+        "printwerk",
+        "brochures",
+        "folders",
+        "affiches",
+        "flyers",
+        "briefpapier",
+        "naamkaartjes",
+        "visitekaartjes",
+        "jaarverslag drukken",
+        "magazine drukken",
+        "offsetdruk",
+        "digitaal drukwerk",
+        "impression",
+        "imprimerie",
+        "travaux d'impression",
+        "prestations d'impression",
+        "imprimés",
+        "impression de documents",
+        "impression offset",
+        "impression numérique",
+        "impression de brochures",
+        "impression du magazine",
+        "impression du bulletin",
+        "printing services",
+        "printed matter",
+        "print services"
+      ],
+      "uitsluiten": [
+        "impression 3D",
+        "3D-print*",
+        "3D print*",
+        "imprimante*",
+        "printers",
+        "multifunctionele printers",
+        "copieurs",
+        "abonnement*",
+        "tijdschriftabonnement*",
+        "boeken",
+        "livres",
+        "manuels scolaires",
+        "schoolboeken"
+      ]
+    },
+    {
+      "id": "it_diensten",
+      "naam": "IT-diensten",
+      "luik": "it",
+      "soort": [
+        "oproep"
+      ],
+      "cpv": [
+        "72"
+      ],
+      "trefwoorden": [
+        "IT-diensten",
+        "ICT-diensten",
+        "softwareontwikkeling",
+        "applicatieontwikkeling",
+        "maatwerksoftware",
+        "cloudmigratie",
+        "services informatiques",
+        "prestations informatiques",
+        "développement logiciel",
+        "développement d'applications",
+        "tierce maintenance applicative",
+        "IT services",
+        "software development",
+        "application development"
+      ],
+      "uitsluiten": []
+    },
+    {
+      "id": "consultancy",
+      "naam": "Consultancy",
+      "luik": "it",
+      "soort": [
+        "oproep"
+      ],
+      "cpv": [
+        "794",
+        "79411",
+        "79412",
+        "79413",
+        "79414",
+        "79419",
+        "72220",
+        "72221",
+        "72222",
+        "72224",
+        "72226",
+        "72227",
+        "72228",
+        "73220"
+      ],
+      "trefwoorden": [
+        "consultancy",
+        "consultancyopdracht",
+        "adviesopdracht",
+        "adviesdiensten",
+        "managementadvies",
+        "strategisch advies",
+        "procesbegeleiding",
+        "organisatieadvies",
+        "digitale transformatie",
+        "conseil en management",
+        "conseil en stratégie",
+        "prestations de conseil",
+        "mission de conseil",
+        "accompagnement au changement",
+        "transformation numérique",
+        "management consultancy",
+        "consulting services",
+        "business consulting",
+        "digital transformation"
+      ],
+      "uitsluiten": []
+    },
+    {
+      "id": "ux_design",
+      "naam": "User experience & design",
+      "luik": "it",
+      "soort": [
+        "oproep"
+      ],
+      "cpv": [
+        "79822500",
+        "79415200",
+        "72413",
+        "79930",
+        "79931"
+      ],
+      "trefwoorden": [
+        "user experience",
+        "UX",
+        "UI",
+        "UX/UI",
+        "gebruikerservaring",
+        "gebruiksvriendelijkheid",
+        "usability",
+        "gebruikersonderzoek",
+        "service design",
+        "webdesign",
+        "webontwerp",
+        "grafisch ontwerp",
+        "huisstijl",
+        "design thinking",
+        "interactieontwerp",
+        "expérience utilisateur",
+        "ergonomie web",
+        "design de services",
+        "conception graphique",
+        "identité visuelle",
+        "webdesign",
+        "design UX",
+        "user research",
+        "interaction design",
+        "graphic design",
+        "visual identity"
+      ],
+      "uitsluiten": []
+    },
+    {
+      "id": "ai",
+      "naam": "AI-implementaties",
+      "luik": "it",
+      "soort": [
+        "oproep"
+      ],
+      "cpv": [],
+      "trefwoorden": [
+        "kunstmatige intelligentie",
+        "artificiële intelligentie",
+        "AI",
+        "AI-toepassing*",
+        "AI-oplossing*",
+        "AI-platform",
+        "generatieve AI",
+        "machine learning",
+        "chatbot*",
+        "taalmodel*",
+        "LLM",
+        "LLMs",
+        "spraakherkenning",
+        "beeldherkenning",
+        "voorspellende analyse",
+        "intelligence artificielle",
+        "l'IA",
+        "l’IA",
+        "d'IA",
+        "d’IA",
+        "IA générative",
+        "agent conversationnel",
+        "apprentissage automatique",
+        "traitement automatique du langage",
+        "artificial intelligence",
+        "generative AI",
+        "large language model*",
+        "natural language processing",
+        "NLP",
+        "computer vision",
+        "deep learning"
+      ],
+      "uitsluiten": [
+        "AI 20*",
+        "AI-20*",
+        "IA-systeem*",
+        "IA-systemen"
+      ]
+    },
+    {
+      "id": "eenmalige_levering",
+      "naam": "Eenmalige levering van standaardgoederen",
+      "luik": "leveringen",
+      "soort": [
+        "oproep"
+      ],
+      "regel": "eenmalige_levering",
+      "cpv": [],
+      "cpv_uitsluiten": [
+        "09",
+        "45",
+        "65",
+        "66",
+        "15",
+        "03"
+      ],
+      "trefwoorden": [],
+      "uitsluiten": [
+        "raamovereenkomst",
+        "raamcontract",
+        "accord-cadre",
+        "accords-cadres",
+        "framework agreement",
+        "dynamisch aankoopsysteem",
+        "système d'acquisition dynamique",
+        "dynamic purchasing system",
+        "SAD",
+        "DAS",
+        "leasing",
+        "huur",
+        "location",
+        "renting",
+        "op maat",
+        "maatwerk",
+        "sur mesure",
+        "conception-réalisation",
+        "design and build",
+        "concession",
+        "abonnement"
+      ]
+    },
+    {
+      "id": "niet_gegund",
+      "naam": "Niet gegund",
+      "luik": "niet_gegund",
+      "soort": [
+        "resultaat"
+      ],
+      "regel": "niet_gegund",
+      "cpv": [],
+      "trefwoorden": [],
+      "uitsluiten": []
+    }
+  ],
+  "coming_up": [
+    {
+      "id": "ipex",
+      "naam": "IPEX",
+      "maanden": 12,
+      "historiek_vanaf": "20201101",
+      "xml_per_run": 700,
+      "_uitleg": "Contracten in BE/NL/LU/FR die binnen 'maanden' aflopen (incl. mogelijke verlengingen), plus vooraankondigingen. cpv = exacte CPV-codes.",
+      "cpv": [
+        "72512000",
+        "48311000",
+        "48311100",
+        "79999100",
+        "79995100",
+        "79996100",
+        "79131000",
+        "72252000",
+        "79823000",
+        "79824000",
+        "79571000",
+        "79570000",
+        "64110000",
+        "64112000",
+        "64121100",
+        "79342100",
+        "79940000",
+        "66172000"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,478 @@
+<title>Adjudica Aanbestedingsmonitor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Adjudica-huisstijl — woordmerk + statusregel, luiken als tabs, filterstrook, publicaties als registerregels */
+:root{
+  --bg:#E9ECE6; --paper:#F8F9F6; --ink:#0F1D26; --muted:#56636B; --line:#D2D8CF;
+  --accent:#1A5B47; --accent-soft:#DCE8E1; --warn:#9A4A0B; --warn-soft:#F6E9D7; --crit:#A8281C; --crit-soft:#F6E1DD;
+  --new:#1F4E9A; --new-soft:#DFE7F4;
+  --f-display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B151B; --paper:#122029; --ink:#E7ECE8; --muted:#94A3A8; --line:#24343D;
+  --accent:#5FB898; --accent-soft:#163329; --warn:#F0A65A; --warn-soft:#33240F; --crit:#F0786C; --crit-soft:#3A1A17;
+  --new:#8FB0F2; --new-soft:#1A2A45; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B151B; --paper:#122029; --ink:#E7ECE8; --muted:#94A3A8; --line:#24343D;
+  --accent:#5FB898; --accent-soft:#163329; --warn:#F0A65A; --warn-soft:#33240F; --crit:#F0786C; --crit-soft:#3A1A17;
+  --new:#8FB0F2; --new-soft:#1A2A45; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1120px;margin:0 auto;display:grid;gap:18px}
+a{color:inherit}
+header{display:grid;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-family:var(--f-display);font-weight:800;font-size:22px;letter-spacing:-.03em;text-decoration:none;color:var(--ink)}
+.brand span{color:var(--accent)}
+.lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--paper)}
+.lang button{font:inherit;font-size:12.5px;font-weight:700;letter-spacing:.06em;border:0;background:none;color:var(--muted);padding:6px 11px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.titlerow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+h1{font-family:var(--f-display);font-size:clamp(26px,4.4vw,38px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0;text-wrap:balance}
+h1 small{display:block;font-family:var(--f-mono);font-size:11.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.status{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;color:var(--muted)}
+.src{font-family:var(--f-mono);font-size:11.5px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);background:var(--paper)}
+.src.ok::before{content:"●";color:var(--accent);margin-right:5px}
+.src.fail::before{content:"●";color:var(--crit);margin-right:5px}
+.menubar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px}
+.mb-knop{font:inherit;font-weight:600;font-size:14px;display:flex;gap:8px;align-items:center;padding:8px 12px;border-radius:8px;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;white-space:nowrap}
+.mb-knop[aria-current="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mb-knop[aria-current="true"] .count{background:var(--bg);color:var(--ink)}
+.mb-knop .sub{font-weight:500;opacity:.8;max-width:34vw;overflow:hidden;text-overflow:ellipsis}
+.mb-knop .pijl{font-size:11px;opacity:.7}
+.dd{position:relative}
+.dd-menu{position:absolute;z-index:20;top:calc(100% + 6px);left:0;min-width:280px;max-width:calc(100vw - 32px);background:var(--paper);
+  border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(15,29,38,.14);padding:6px;display:grid;gap:2px}
+.dd-menu button{font:inherit;font-size:14px;text-align:left;display:flex;justify-content:space-between;gap:12px;align-items:center;
+  padding:9px 10px;border:0;border-radius:6px;background:none;color:var(--ink);cursor:pointer}
+.dd-menu button:hover,.dd-menu button[aria-checked="true"]{background:var(--accent-soft)}
+.dd-menu small{display:block;color:var(--muted);font-size:12px;font-weight:400}
+li.maand{padding:10px 16px;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  background:var(--bg);border-top:1px solid var(--line)}
+li.maand:first-child{border-top:0}
+.cu-intro{font-size:13.5px;color:var(--muted);max-width:75ch;margin:0}
+.tag.wie{background:var(--line)}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.count{font-family:var(--f-mono);font-size:11.5px;font-weight:500;padding:1px 7px;border-radius:99px;background:var(--line);color:var(--ink)}
+.count.n{background:var(--accent);color:var(--paper)}
+.filters{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.filters input[type=search]{flex:1 1 240px;min-width:0;font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+.filters select{font:inherit;font-size:13.5px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:13px;padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+label.tog{display:flex;gap:6px;align-items:center;font-size:13.5px;color:var(--muted);cursor:pointer}
+.summary{font-size:13px;color:var(--muted)}
+ol.list{list-style:none;margin:0;padding:0;background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.item{display:grid;grid-template-columns:96px minmax(0,1fr) 150px;gap:14px;padding:14px 16px;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}
+.meta-l{display:grid;gap:4px;align-content:start;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.meta-l .flag{font-family:var(--f-mono);font-weight:500;color:var(--ink)}
+.body{min-width:0;display:grid;gap:5px}
+.title{font-weight:650;font-size:15.5px;line-height:1.35;text-decoration:none}
+.title:hover{text-decoration:underline;text-decoration-color:var(--accent)}
+.buyer{font-size:13.5px;color:var(--muted)}
+.desc{font-size:13.5px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
+.tag{font-size:11.5px;padding:2px 8px;border-radius:5px;background:var(--accent-soft);color:var(--ink)}
+.tag i{font-style:normal;color:var(--muted)}
+.tag.new{background:var(--new-soft);color:var(--new);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.cpv{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.meta-r{display:grid;gap:6px;justify-items:end;align-content:start;text-align:right;font-size:12.5px;font-variant-numeric:tabular-nums}
+.pill{font-size:12px;font-weight:600;padding:3px 9px;border-radius:6px;background:var(--line)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.crit{background:var(--crit-soft);color:var(--crit)}
+.pill.ok{background:var(--accent-soft);color:var(--accent)}
+.value{color:var(--muted)}
+.actions{display:flex;gap:6px}
+.actions button{font:inherit;font-size:12px;background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:3px 8px;cursor:pointer}
+.actions button{font-size:13px;display:flex;gap:5px;align-items:center}
+.actions button .ster{font-size:15px;line-height:1}
+.actions button[aria-pressed="true"]{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.more{display:flex;justify-content:center}
+.more button{font:inherit;font-weight:600;padding:9px 18px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.note{font-size:12.5px;color:var(--muted);border-left:3px solid var(--warn);padding:6px 10px;background:var(--warn-soft)}
+@media (max-width:720px){
+  .menubar{position:relative}
+  .dd{position:static}
+  .dd-menu{left:0;right:0;min-width:0;max-width:none}
+  .item{grid-template-columns:minmax(0,1fr);gap:8px}
+  .meta-l{grid-auto-flow:column;justify-content:start;gap:10px}
+  .meta-r{justify-items:start;text-align:left;grid-auto-flow:column;justify-content:start;align-items:center}
+}
+@media (prefers-reduced-motion:no-preference){.item{transition:opacity .15s}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="topbar">
+      <a class="brand" href="https://adjudica.be" target="_blank" rel="noopener" aria-label="Adjudica">Adjudica<span>.</span></a>
+      <div class="lang" role="group" aria-label="Taal / Langue">
+        <button type="button" id="lang-nl" data-lang="nl">NL</button>
+        <button type="button" id="lang-fr" data-lang="fr">FR</button>
+      </div>
+    </div>
+    <div class="titlerow">
+      <h1><small>BE · NL · LU · FR · TED</small><span data-i18n="titel"></span></h1>
+      <div class="status" id="status"></div>
+    </div>
+  </header>
+  <div class="note" id="note" hidden></div>
+  <nav class="menubar" id="menubar"></nav>
+  <p class="cu-intro" id="cuIntro" hidden></p>
+  <div class="filters">
+    <input type="search" id="q" data-i18n-ph="zoek">
+    <div class="chips" id="landen"></div>
+    <select id="sort">
+      <option value="pub" data-i18n="sortPub"></option>
+      <option value="deadline" data-i18n="sortDeadline"></option>
+      <option value="waarde" data-i18n="sortWaarde"></option>
+    </select>
+  </div>
+  <div class="filters" id="filters2">
+    <div class="chips" id="profielen"></div>
+    <label class="tog" id="togNieuw"><input type="checkbox" id="nieuw"> <span data-i18n="alleenNieuw"></span></label>
+    <label class="tog" id="togOpen"><input type="checkbox" id="open" checked> <span data-i18n="open"></span></label>
+  </div>
+  <div class="summary" id="summary"></div>
+  <ol class="list" id="list"></ol>
+  <div class="more" id="more" hidden><button type="button" id="moreBtn" data-i18n="meer"></button></div>
+</div>
+
+<script>
+const INGEBED = /*__DATA__*/null;
+const T = {
+  nl:{titel:"Aanbestedingsmonitor", zoek:"Zoek in titel, koper, CPV…", sortPub:"Nieuwste publicatie", sortDeadline:"Eerstvolgende deadline",
+    sortWaarde:"Hoogste geraamde waarde", alleenNieuw:"Alleen nieuw", open:"Deadline nog niet verstreken", favorieten:"Favorieten", favoriet:"Favoriet", categorieen:"Categorieën", comingUp:"Coming up",
+    cuIntro:n=>`Lopende contracten die in de komende ${n} maanden aflopen (inclusief mogelijke verlengingen), plus vooraankondigingen. Bron: gunningsberichten en aankondigingen op TED.`,
+    cuSub:n=>`Contracten die binnen ${n} maanden aflopen`, leverancier:"Huidige leverancier", looptAf:"Loopt af", verlengdTot:"met verlengingen tot",
+    geschat:"geschat", vooraankondiging:"Vooraankondiging", over:n=>n<=0?"Deze maand":n===1?"Over 1 maand":`Over ${n} maanden`,
+    cuLeeg:"Geen aflopende contracten gevonden voor deze filters.", gegund:"Gegund", aangekondigd:"Aangekondigd",
+    favLeeg:"Nog geen favorieten. Klik op ☆ Favoriet bij een publicatie om ze hier te bewaren.",
+    meer:"Meer tonen", bijgewerkt:"Bijgewerkt", publicaties:n=>`${n} publicatie${n===1?"":"s"}`, getoond:n=>`${n} getoond`,
+    leeg:"Geen publicaties voor deze filters. Pas de filters aan of wacht op de volgende run.", nieuw:"Nieuw",
+    geenKandidaten:"Geen kandidaten", nietGegund:"Niet gegund", verstreken:"Verstreken", vandaag:"Vandaag", dagen:n=>`${n} dagen`,
+    geenDeadline:"Geen deadline", offertes:n=>`${n} offerte(s) ontvangen`, sector:"Sector", zonderTitel:"(zonder titel)",
+    voorbeeld:"Voorbeeldgegevens: de monitor heeft nog geen data aangeleverd.",
+    bronFout:l=>`Bron niet bereikbaar bij de laatste run: ${l}. De overige bronnen zijn wel bijgewerkt.`,
+    opgehaald:n=>`${n} publicaties opgehaald`, totaal:"totaal", nieuwN:n=>`${n} nieuw`,
+    aard:{supplies:"Leveringen",services:"Diensten",works:"Werken"},
+    luiken:{documenten:"Drukwerk, documentcommunicatie & betalingen", it:"IT, consultancy, UX & AI", leveringen:"Eenmalige leveringen (off-the-shelf)", niet_gegund:"Niet-gegunde aanbestedingen"},
+    profielen:{transactioneel_drukwerk:"Transactioneel drukwerk & hybride post", betalingen_incasso:"Betalingen & incasso", algemeen_drukwerk:"Algemeen drukwerk",
+      it_diensten:"IT-diensten", consultancy:"Consultancy", ux_design:"User experience & design", ai:"AI-implementaties",
+      eenmalige_levering:"Eenmalige levering", niet_gegund:"Niet gegund"},
+    reden:{"no-rece":"Geen offertes of aanvragen ontvangen","all-rej":"Alle offertes/aanvragen afgewezen","chan-need":"Gewijzigde behoefte van de aanbesteder",
+      "ins-funds":"Onvoldoende middelen","one-admis":"Slechts één aanvaardbare offerte"}, deels:" (enkele percelen)",
+    waarom:{cpv:"CPV", trefwoord:"trefwoord", levering:"levering zonder raamovereenkomst"}},
+  fr:{titel:"Veille des marchés publics", zoek:"Rechercher dans l'objet, l'acheteur, le CPV…", sortPub:"Publication la plus récente", sortDeadline:"Date limite la plus proche",
+    sortWaarde:"Valeur estimée la plus élevée", alleenNieuw:"Nouveaux uniquement", open:"Date limite non dépassée", favorieten:"Favoris", favoriet:"Favori", categorieen:"Catégories", comingUp:"À venir",
+    cuIntro:n=>`Contrats en cours arrivant à échéance dans les ${n} prochains mois (reconductions possibles comprises), ainsi que les avis de préinformation. Source : avis d'attribution et de marché publiés sur TED.`,
+    cuSub:n=>`Contrats arrivant à échéance sous ${n} mois`, leverancier:"Titulaire actuel", looptAf:"Échéance", verlengdTot:"avec reconductions jusqu'au",
+    geschat:"estimée", vooraankondiging:"Avis de préinformation", over:n=>n<=0?"Ce mois-ci":n===1?"Dans 1 mois":`Dans ${n} mois`,
+    cuLeeg:"Aucun contrat arrivant à échéance pour ces filtres.", gegund:"Attribué", aangekondigd:"Publié",
+    favLeeg:"Aucun favori pour l'instant. Cliquez sur ☆ Favori à côté d'un avis pour le conserver ici.",
+    meer:"Afficher plus", bijgewerkt:"Mis à jour", publicaties:n=>`${n} avis`, getoond:n=>`${n} affichés`,
+    leeg:"Aucun avis pour ces filtres. Modifiez les filtres ou attendez la prochaine mise à jour.", nieuw:"Nouveau",
+    geenKandidaten:"Aucune offre", nietGegund:"Non attribué", verstreken:"Dépassée", vandaag:"Aujourd'hui", dagen:n=>`${n} jours`,
+    geenDeadline:"Pas de date limite", offertes:n=>`${n} offre(s) reçue(s)`, sector:"Secteur", zonderTitel:"(sans objet)",
+    voorbeeld:"Données d'exemple : la veille n'a pas encore fourni de données.",
+    bronFout:l=>`Source inaccessible lors de la dernière mise à jour : ${l}. Les autres sources sont à jour.`,
+    opgehaald:n=>`${n} avis récupérés`, totaal:"total", nieuwN:n=>`${n} nouveaux`,
+    aard:{supplies:"Fournitures",services:"Services",works:"Travaux"},
+    luiken:{documenten:"Impression, communication documentaire & paiements", it:"IT, conseil, UX & IA", leveringen:"Fournitures ponctuelles (sur étagère)", niet_gegund:"Marchés non attribués"},
+    profielen:{transactioneel_drukwerk:"Impression transactionnelle & courrier hybride", betalingen_incasso:"Paiements & recouvrement", algemeen_drukwerk:"Impression générale",
+      it_diensten:"Services informatiques", consultancy:"Conseil", ux_design:"Expérience utilisateur & design", ai:"Intelligence artificielle",
+      eenmalige_levering:"Fourniture ponctuelle", niet_gegund:"Non attribué"},
+    reden:{"no-rece":"Aucune offre ni demande reçue","all-rej":"Toutes les offres/demandes rejetées","chan-need":"Changement des besoins de l'acheteur",
+      "ins-funds":"Fonds insuffisants","one-admis":"Une seule offre recevable"}, deels:" (certains lots)",
+    waarom:{cpv:"CPV", trefwoord:"mot-clé", levering:"fourniture hors accord-cadre"}}
+};
+const LANDEN = {BEL:"BE",NLD:"NL",LUX:"LU",FRA:"FR"};
+const store = {
+  get(k,d){try{const v=localStorage.getItem("am:"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("am:"+k,JSON.stringify(v))}catch(e){}}
+};
+const state = {luik: store.get("luik","documenten"), land:new Set(), profiel:new Set(), toon:60, taal: store.get("taal","nl"),
+  fav: {}};
+try{ for (const id of store.get("bewaard",[])) state.fav[id]=null; }catch(e){}
+let DATA = null;
+const t = k => T[state.taal][k];
+
+/* Favorieten: per persoon bewaard in de artifact-database (synchroon over toestellen);
+   zonder database (lokaal bestand) valt het terug op deze browser. */
+let favDoc = null, favBezig = Promise.resolve();
+function slimItem(it){ const c={...it}; if(c.beschrijving) c.beschrijving=c.beschrijving.slice(0,300); delete c.sectoren_tmp; return c; }
+function bewaarFav(){
+  const body={items:{}}; for (const [id,it] of Object.entries(state.fav)) body.items[id]=it||{id};
+  try{ store.set("bewaard", Object.keys(state.fav)); }catch(e){}
+  if (!favDoc) return;
+  favBezig = favBezig.then(()=>favDoc.set(body)).catch(e=>console.warn("favorieten opslaan mislukt", e && e.code));
+}
+async function startFavDb(){
+  try{
+    if (!window.claude || !window.claude.use) return;
+    const [db,user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    const uid = user && await user.id();
+    if (!db || !uid) return;
+    favDoc = db.doc("data/users/"+uid+"/favorieten");
+    let eerste = true;
+    favDoc.onSnapshot(snap=>{
+      const remote = snap.exists ? (snap.data().items||{}) : {};
+      if (eerste) {
+        eerste = false;
+        const lokaal = Object.keys(state.fav).filter(id=>!(id in remote));
+        state.fav = {...remote};
+        // eenmalig lokale favorieten (van voor de database) meenemen
+        if (lokaal.length && DATA){ for (const id of lokaal){ const it=alleItems().find(x=>x.id===id); if(it) state.fav[id]=slimItem(it);} bewaarFav(); }
+      } else state.fav = {...remote};
+      if (DATA) render();
+    }, e=>console.warn("favorieten niet beschikbaar", e && e.code));
+  }catch(e){ console.warn(e); }
+}
+function toggleFav(id){
+  if (id in state.fav) delete state.fav[id];
+  else { const it=alleItems().find(x=>x.id===id) || (state.fav[id]); state.fav[id]= it ? slimItem(it) : {id}; }
+  bewaarFav(); render();
+}
+
+const voorbeeld = {gegenereerd:"2026-10-27T07:00:00", voorbeeld:true,
+  run:{tijdstip:"2026-10-27T07:00:00",bronnen:{ted:{ok:true,aantal:635},tenderned:{ok:true,aantal:111},boamp:{ok:true,aantal:214},pmp_lu:{ok:true,aantal:12}},nieuw:2},
+  luiken:[{id:"documenten"},{id:"it"},{id:"leveringen"},{id:"niet_gegund"}],
+  profielen:[{id:"transactioneel_drukwerk",luik:"documenten"},{id:"algemeen_drukwerk",luik:"documenten"},{id:"niet_gegund",luik:"niet_gegund"}],
+  items:[
+    {id:"vb1",bron:"TED",land:"BEL",titel:"Voorbeeld: printen, couverteren en verzenden van aanslagbiljetten",koper:"Voorbeeldstad",gepubliceerd:"2026-10-27",deadline:"2026-12-01",cpv:["79823000"],aard:"services",soort:"oproep",url:"#",eerst_gezien:"2026-10-27T07:00:00",profielen:{transactioneel_drukwerk:"CPV 79823000"},waarde:450000,munt:"EUR"},
+    {id:"vb3",bron:"TED",land:"LUX",titel:"Exemple : services de traduction (lot 2)",koper:"Ministère (exemple)",gepubliceerd:"2026-10-20",cpv:["79530000"],aard:"services",soort:"resultaat",niet_gegund:true,reden_code:"no-rece",reden_niet_gegund:"Geen offertes of aanvragen ontvangen",url:"#",eerst_gezien:"2026-10-27T07:00:00",profielen:{niet_gegund:"x"}}
+  ]};
+
+async function laad(){
+  if (INGEBED) return INGEBED;
+  try{const r = await fetch("data.json",{cache:"no-store"}); if(r.ok) return await r.json();}catch(e){}
+  return voorbeeld;
+}
+
+const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const vandaag = new Date(); vandaag.setHours(0,0,0,0);
+const locale = () => state.taal==="fr" ? "fr-BE" : "nl-BE";
+function dagenTot(d){ if(!d) return null; const x=new Date(d+"T00:00:00"); return Math.round((x-vandaag)/864e5); }
+function fmtDatum(d){ if(!d) return "—"; const [y,m,dd]=d.split("-"); return `${dd}.${m}.${y}`; }
+function fmtWaarde(v,m){ if(v==null) return ""; return new Intl.NumberFormat(locale(),{maximumFractionDigits:0}).format(v)+" "+(m||"EUR"); }
+const isNieuw = it => DATA.run && it.eerst_gezien === DATA.run.tijdstip;
+const profielNaam = id => t("profielen")[id] || (DATA.profielen.find(p=>p.id===id)||{}).naam || id;
+const luikNaam = l => t("luiken")[l.id] || l.naam || l.id;
+const luikVan = id => (DATA.profielen.find(p=>p.id===id)||{}).luik;
+function inLuik(it, luik){ return Object.keys(it.profielen||{}).some(p=>luikVan(p)===luik); }
+function waarom(w){
+  if(!w) return "";
+  if(w.startsWith("CPV ")) return w;
+  const m=w.match(/^trefwoord '(.*)'$/); if(m) return `${t("waarom").trefwoord} « ${m[1]} »`;
+  if(w==="levering zonder raamovereenkomst") return t("waarom").levering;
+  return w;
+}
+function redenTekst(it){
+  if(!it.niet_gegund) return "";
+  const r=t("reden")[it.reden_code];
+  if(r && it.bron==="TED") return r + ((it.reden_niet_gegund||"").includes("enkele percelen")?t("deels"):"");
+  return it.reden_niet_gegund || t("nietGegund");
+}
+
+function vertaalStatisch(){
+  document.documentElement.lang = state.taal;
+  document.querySelectorAll("[data-i18n]").forEach(e=>e.textContent=t(e.dataset.i18n));
+  document.querySelectorAll("[data-i18n-ph]").forEach(e=>{e.placeholder=t(e.dataset.i18nPh); e.setAttribute("aria-label",t(e.dataset.i18nPh));});
+  document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.lang===state.taal));
+}
+
+function renderStatus(){
+  const s=document.getElementById("status"); const run=DATA.run||{};
+  const tijd = run.tijdstip ? new Date(run.tijdstip) : null;
+  let h = tijd ? `${t("bijgewerkt")} ${tijd.toLocaleDateString(locale(),{weekday:"short",day:"numeric",month:"short"})} ${tijd.toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"})}` : "";
+  const namen={ted:"TED",tenderned:"TenderNed",boamp:"BOAMP",pmp_lu:"pmp.lu"};
+  for (const [k,v] of Object.entries(run.bronnen||{})) h += ` <span class="src ${v.ok?"ok":"fail"}" title="${esc(v.ok?t("opgehaald")(v.aantal):v.fout)}">${namen[k]||k}</span>`;
+  s.innerHTML = h;
+  const note=document.getElementById("note");
+  note.hidden=true;
+  if (DATA.voorbeeld){ note.hidden=false; note.textContent=t("voorbeeld"); }
+  else { const f=Object.entries(run.bronnen||{}).filter(([k,v])=>!v.ok); if(f.length){note.hidden=false; note.textContent=t("bronFout")(f.map(([k])=>namen[k]||k).join(", "));} }
+}
+
+const isCU = () => state.luik.startsWith("cu:");
+const cuLijsten = () => (DATA && DATA.coming_up) || [];
+const cuHuidig = () => cuLijsten().find(l=>"cu:"+l.id===state.luik);
+function alleItems(){ return DATA.items.concat(...cuLijsten().map(l=>l.items)); }
+function cuEind(it){ const nu=vandaagIso(); return (it.einddatum && it.einddatum>=nu) ? it.einddatum : (it.einddatum_max || it.einddatum || ""); }
+function vandaagIso(){ const y=vandaag.getFullYear(), m=String(vandaag.getMonth()+1).padStart(2,"0"), d=String(vandaag.getDate()).padStart(2,"0"); return `${y}-${m}-${d}`; }
+
+let openMenu = null;
+function sluitMenus(){ openMenu=null; document.querySelectorAll(".dd-menu").forEach(m=>m.hidden=true);
+  document.querySelectorAll(".dd > .mb-knop").forEach(b=>b.setAttribute("aria-expanded","false")); }
+function kies(luik){ state.luik=luik; state.profiel.clear(); state.toon=60; store.set("luik",luik);
+  document.getElementById("open").checked = luik!=="niet_gegund" && luik!=="favorieten"; sluitMenus(); render(); }
+
+function renderTabs(){
+  const nav=document.getElementById("menubar");
+  const catItems = DATA.luiken.map(l=>{
+    const items = DATA.items.filter(it=>!it.dubbel_van && inLuik(it,l.id));
+    const n = items.filter(isNieuw).length;
+    return {luik:l.id, naam:luikNaam(l), count:n?("+"+n):items.length, nieuw:n};
+  });
+  const huidigCat = catItems.find(c=>c.luik===state.luik);
+  const cu = cuLijsten(), huidigCU = cuHuidig();
+  const dd = (key, label, huidig, opties) => `<div class="dd">
+      <button type="button" class="mb-knop" data-menu="${key}" aria-haspopup="true" aria-expanded="${openMenu===key}" aria-current="${!!huidig}">
+        ${esc(label)}${huidig?`<span class="sub">· ${esc(huidig.naam)}</span>`:""}<span class="pijl" aria-hidden="true">▼</span></button>
+      <div class="dd-menu" data-for="${key}" role="menu" ${openMenu===key?"":"hidden"}>
+        ${opties.map(o=>`<button type="button" role="menuitemradio" aria-checked="${state.luik===o.luik}" data-luik="${o.luik}">
+          <span>${esc(o.naam)}${o.sub?`<small>${esc(o.sub)}</small>`:""}</span><span class="count ${o.nieuw?"n":""}">${o.count}</span></button>`).join("")}
+      </div></div>`;
+  nav.innerHTML =
+    `<button type="button" class="mb-knop" data-luik="favorieten" aria-current="${state.luik==="favorieten"}">★ ${esc(t("favorieten"))} <span class="count">${favLijst().length}</span></button>`
+    + dd("cat", t("categorieen"), huidigCat, catItems)
+    + (cu.length ? dd("cu", t("comingUp"), huidigCU && {naam:huidigCU.naam}, cu.map(l=>({luik:"cu:"+l.id,naam:l.naam,sub:t("cuSub")(l.maanden||12),count:l.items.length}))) : "");
+  nav.querySelectorAll("[data-luik]").forEach(b=>b.onclick=()=>kies(b.dataset.luik));
+  nav.querySelectorAll("[data-menu]").forEach(b=>b.onclick=e=>{e.stopPropagation(); const k=b.dataset.menu;
+    const was=openMenu===k; sluitMenus(); if(!was){ openMenu=k; nav.querySelector(`[data-for="${k}"]`).hidden=false; b.setAttribute("aria-expanded","true");
+      const eerste=nav.querySelector(`[data-for="${k}"] button`); if(eerste) eerste.focus(); }});
+}
+document.addEventListener("click",e=>{ if(openMenu && !e.target.closest(".dd")) sluitMenus(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && openMenu){ const k=openMenu; sluitMenus(); const b=document.querySelector(`[data-menu="${k}"]`); if(b) b.focus(); }});
+
+function renderChips(){
+  const lc=document.getElementById("landen");
+  lc.innerHTML = Object.entries(LANDEN).map(([k,v])=>`<button type="button" class="chip" data-land="${k}" aria-pressed="${state.land.has(k)}">${v}</button>`).join("");
+  lc.querySelectorAll("button").forEach(b=>b.onclick=()=>{const k=b.dataset.land; state.land.has(k)?state.land.delete(k):state.land.add(k); render();});
+  const pc=document.getElementById("profielen");
+  const profs = state.luik==="niet_gegund"
+    ? DATA.profielen.filter(p=>p.luik==="documenten"||p.luik==="it").map(p=>({id:p.id,naam:t("sector")+": "+profielNaam(p.id)}))
+    : (state.luik==="favorieten" || isCU()) ? []
+    : DATA.profielen.filter(p=>p.luik===state.luik).map(p=>({id:p.id,naam:profielNaam(p.id)}));
+  pc.innerHTML = profs.length>1 ? profs.map(p=>`<button type="button" class="chip" data-p="${p.id}" aria-pressed="${state.profiel.has(p.id)}">${esc(p.naam)}</button>`).join("") : "";
+  pc.querySelectorAll("button").forEach(b=>b.onclick=()=>{const k=b.dataset.p; state.profiel.has(k)?state.profiel.delete(k):state.profiel.add(k); render();});
+}
+
+function favLijst(){
+  return Object.entries(state.fav).map(([id,it])=>alleItems().find(x=>x.id===id) || (it && it.titel ? it : null)).filter(Boolean);
+}
+function gefilterd(){
+  const q=document.getElementById("q").value.trim().toLowerCase();
+  const alleenNieuw=document.getElementById("nieuw").checked, open=document.getElementById("open").checked;
+  if (isCU()) {
+    let r = (cuHuidig()||{items:[]}).items.slice();
+    if (state.land.size) r=r.filter(it=>state.land.has(it.land));
+    if (q) r=r.filter(it=>[it.titel,it.koper,it.leverancier,(it.cpv||[]).join(" ")].join(" ").toLowerCase().includes(q));
+    if (document.getElementById("sort").value==="waarde") r.sort((a,b)=>(b.waarde||0)-(a.waarde||0));
+    else r.sort((a,b)=>(a.soort==="vooraankondiging")-(b.soort==="vooraankondiging") || (cuEind(a)||"9999").localeCompare(cuEind(b)||"9999"));
+    return r;
+  }
+  let r = state.luik==="favorieten" ? favLijst() : DATA.items.filter(it=>!it.dubbel_van && inLuik(it,state.luik));
+  if (state.profiel.size) r=r.filter(it=>Object.keys(it.profielen).concat(it.sectoren||[]).some(p=>state.profiel.has(p)));
+  if (state.land.size) r=r.filter(it=>state.land.has(it.land));
+  if (alleenNieuw) r=r.filter(isNieuw);
+  if (open && state.luik!=="niet_gegund" && state.luik!=="favorieten") r=r.filter(it=>{const d=dagenTot(it.deadline); return d===null||d>=0;});
+  if (q) r=r.filter(it=>[it.titel,it.koper,it.beschrijving,(it.cpv||[]).join(" "),it.bron].join(" ").toLowerCase().includes(q));
+  const s=document.getElementById("sort").value;
+  if (state.luik==="niet_gegund" && s==="pub") r.sort((a,b)=>(a.reden_code==="no-rece"?0:1)-(b.reden_code==="no-rece"?0:1) || (b.gepubliceerd||"").localeCompare(a.gepubliceerd||""));
+  else if (s==="deadline") r.sort((a,b)=>(a.deadline||"9999").localeCompare(b.deadline||"9999"));
+  else if (s==="waarde") r.sort((a,b)=>(b.waarde||0)-(a.waarde||0));
+  else r.sort((a,b)=>(b.gepubliceerd||"").localeCompare(a.gepubliceerd||""));
+  return r;
+}
+
+function maandenTot(d){ if(!d) return null; const x=new Date(d+"T00:00:00"); return (x.getFullYear()-vandaag.getFullYear())*12 + x.getMonth()-vandaag.getMonth(); }
+function maandLabel(d){ const x=new Date(d+"T00:00:00"); return x.toLocaleDateString(locale(),{month:"long",year:"numeric"}); }
+function rijCU(it){
+  const eind=cuEind(it), m=maandenTot(eind);
+  let rechts = it.soort==="vooraankondiging" ? `<span class="pill warn">${t("vooraankondiging")}</span>`
+    : eind ? `<span class="pill ${m<=3?"crit":m<=6?"warn":"ok"}">${t("over")(m)}</span><span>${fmtDatum(eind)}${it.geschat?` <i>(${t("geschat")})</i>`:""}</span>` : "";
+  if (it.waarde) rechts+=`<span class="value">${fmtWaarde(it.waarde,"EUR")}</span>`;
+  const regels = [];
+  if (it.leverancier) regels.push(`<span class="tag wie">${t("leverancier")}: <b>${esc(it.leverancier)}</b></span>`);
+  if (it.einddatum && it.einddatum_max && it.einddatum_max!==eind) regels.push(`<span class="tag">${t("looptAf")} ${fmtDatum(it.einddatum)}, ${t("verlengdTot")} ${fmtDatum(it.einddatum_max)}</span>`);
+  else if (it.verlenging) regels.push(`<span class="tag" title="${esc(it.verlenging)}">${esc(it.verlenging.slice(0,80))}</span>`);
+  return `<li class="item" data-id="${esc(it.id)}">
+    <div class="meta-l"><span class="flag">${LANDEN[it.land]||esc(it.land)}</span><span>${it.soort==="vooraankondiging"?t("aangekondigd"):t("gegund")}</span><span>${fmtDatum(it.gepubliceerd)}</span><span>${esc(it.bron)}</span></div>
+    <div class="body">
+      <a class="title" href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.titel||t("zonderTitel"))}</a>
+      <div class="buyer">${esc(it.koper)}</div>
+      ${regels.length?`<div class="tags">${regels.join("")}</div>`:""}
+      ${(it.cpv||[]).length?`<div class="cpv">CPV ${it.cpv.slice(0,6).map(esc).join(" · ")}</div>`:""}
+    </div>
+    <div class="meta-r">${rechts}
+      <div class="actions"><button type="button" data-act="fav" aria-pressed="${it.id in state.fav}"><span class="ster" aria-hidden="true">${it.id in state.fav?"★":"☆"}</span>${t("favoriet")}</button></div>
+    </div></li>`;
+}
+function rij(it){
+  if (it.lijst) return rijCU(it);
+  const d=dagenTot(it.deadline);
+  let rechts="";
+  if (it.niet_gegund) rechts=`<span class="pill ${it.reden_code==="no-rece"?"crit":"warn"}">${it.reden_code==="no-rece"?t("geenKandidaten"):t("nietGegund")}</span>`;
+  else if (d!==null) rechts=`<span class="pill ${d<0?"":d<=7?"crit":d<=14?"warn":"ok"}">${d<0?t("verstreken"):d===0?t("vandaag"):t("dagen")(d)}</span><span>${fmtDatum(it.deadline)}</span>`;
+  else rechts=`<span class="pill">${t("geenDeadline")}</span>`;
+  if (it.waarde) rechts+=`<span class="value">${fmtWaarde(it.waarde,it.munt)}</span>`;
+  const tags = Object.entries(it.profielen||{}).filter(([p])=>!(it.niet_gegund&&p==="niet_gegund")).map(([p,why])=>`<span class="tag" title="${esc(waarom(why))}">${esc(profielNaam(p))} <i>· ${esc(waarom(why))}</i></span>`).join("")
+    + (it.sectoren||[]).map(p=>`<span class="tag">${t("sector")}: ${esc(profielNaam(p))}</span>`).join("");
+  const reden = it.niet_gegund ? `<div class="buyer">${esc(redenTekst(it))}${it.aantal_offertes!=null?` · ${t("offertes")(it.aantal_offertes)}`:""}</div>`:"";
+  return `<li class="item" data-id="${esc(it.id)}">
+    <div class="meta-l"><span class="flag">${LANDEN[it.land]||esc(it.land)}</span><span>${fmtDatum(it.gepubliceerd)}</span><span>${esc(it.bron)}</span></div>
+    <div class="body">
+      <a class="title" href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.titel||t("zonderTitel"))}</a>
+      <div class="buyer">${esc(it.koper)}${it.aard?" · "+(t("aard")[it.aard]||esc(it.aard)):""}${it.procedure?" · "+esc(it.procedure):""}</div>
+      ${reden}
+      ${it.beschrijving?`<div class="desc">${esc(it.beschrijving)}</div>`:""}
+      <div class="tags">${isNieuw(it)?`<span class="tag new">${t("nieuw")}</span>`:""}${tags}</div>
+      ${(it.cpv||[]).length?`<div class="cpv">CPV ${it.cpv.slice(0,6).map(esc).join(" · ")}</div>`:""}
+    </div>
+    <div class="meta-r">${rechts}
+      <div class="actions"><button type="button" data-act="fav" aria-pressed="${it.id in state.fav}"><span class="ster" aria-hidden="true">${it.id in state.fav?"★":"☆"}</span>${t("favoriet")}</button></div>
+    </div></li>`;
+}
+
+function render(){
+  vertaalStatisch(); renderStatus(); renderTabs(); renderChips();
+  const r=gefilterd();
+  const list=document.getElementById("list");
+  const cu=isCU();
+  document.getElementById("togNieuw").hidden = cu;
+  document.getElementById("togOpen").hidden = cu || state.luik==="favorieten" || state.luik==="niet_gegund";
+  document.getElementById("filters2").hidden = cu;
+  const so=document.getElementById("sort");
+  so.querySelector('[value="pub"]').textContent = cu ? t("looptAf") : t("sortPub");
+  so.querySelector('[value="deadline"]').hidden = cu;
+  if (cu && so.value==="deadline") so.value="pub";
+  const intro=document.getElementById("cuIntro"); intro.hidden=!cu; if(cu) intro.textContent=t("cuIntro")((cuHuidig()||{}).maanden||12);
+  let html = "", vorige = null;
+  for (const it of r.slice(0,state.toon)) {
+    if (cu && so.value==="pub") {
+      const key = it.soort==="vooraankondiging" || !cuEind(it) ? t("vooraankondiging") : maandLabel(cuEind(it));
+      if (key!==vorige){ html += `<li class="maand">${esc(key)}</li>`; vorige=key; }
+    }
+    html += rij(it);
+  }
+  list.innerHTML = r.length ? html : `<li class="empty">${state.luik==="favorieten"?t("favLeeg"):cu?t("cuLeeg"):t("leeg")}</li>`;
+  document.getElementById("summary").textContent = t("publicaties")(r.length)+(r.length>state.toon?` · ${t("getoond")(state.toon)}`:"");
+  document.getElementById("more").hidden = r.length<=state.toon;
+}
+
+document.getElementById("list").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-act]"); if(!b) return;
+  toggleFav(b.closest("li").dataset.id);
+});
+document.querySelectorAll(".lang button").forEach(b=>b.onclick=()=>{state.taal=b.dataset.lang; store.set("taal",state.taal); if(DATA) render(); else vertaalStatisch();});
+document.getElementById("moreBtn").onclick=()=>{state.toon+=60; render();};
+["q","sort","nieuw","open"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{state.toon=60; render();}));
+
+if(!T[state.taal]) state.taal="nl";
+vertaalStatisch();
+laad().then(d=>{DATA=d; DATA.coming_up=DATA.coming_up||[]; if(state.luik!=="favorieten" && !DATA.luiken.some(l=>l.id===state.luik) && !DATA.coming_up.some(l=>"cu:"+l.id===state.luik)) state.luik=DATA.luiken[0].id;
+  // favorieten van vóór de database: vul met de volledige gegevens
+  for (const id of Object.keys(state.fav)) if(!state.fav[id]){ const it=alleItems().find(x=>x.id===id); if(it) state.fav[id]=slimItem(it); else delete state.fav[id]; }
+  document.getElementById("open").checked = state.luik!=="niet_gegund" && state.luik!=="favorieten"; render(); startFavDb();});
+</script>
