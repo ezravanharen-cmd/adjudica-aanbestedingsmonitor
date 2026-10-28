@@ -20,6 +20,8 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
+    env:
+      TZ: Europe/Brussels
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
