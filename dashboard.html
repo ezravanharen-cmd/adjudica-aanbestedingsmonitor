@@ -295,7 +295,7 @@ function renderStatus(){
   const s=document.getElementById("status"); const run=DATA.run||{};
   const tijd = run.tijdstip ? new Date(run.tijdstip) : null;
   let h = tijd ? `${t("bijgewerkt")} ${tijd.toLocaleDateString(locale(),{weekday:"short",day:"numeric",month:"short"})} ${tijd.toLocaleTimeString(locale(),{hour:"2-digit",minute:"2-digit"})}` : "";
-  const namen={ted:"TED",tenderned:"TenderNed",boamp:"BOAMP",pmp_lu:"pmp.lu"};
+  const namen={ted:"TED",tenderned:"TenderNed",boamp:"BOAMP",pmp_lu:"pmp.lu",coming_up:"Coming up"};
   for (const [k,v] of Object.entries(run.bronnen||{})) h += ` <span class="src ${v.ok?"ok":"fail"}" title="${esc(v.ok?t("opgehaald")(v.aantal):v.fout)}">${namen[k]||k}</span>`;
   s.innerHTML = h;
   const note=document.getElementById("note");
