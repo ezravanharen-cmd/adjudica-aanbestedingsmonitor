@@ -1,34 +1,37 @@
 {
-  "tijdstip": "2026-10-28T11:15:20",
+  "tijdstip": "2026-10-29T06:28:50",
   "van": "2026-10-27",
-  "tot": "2026-10-28",
+  "tot": "2026-10-29",
   "bronnen": {
     "ted": {
       "ok": true,
-      "aantal": 1114
+      "aantal": 1661
     },
     "tenderned": {
       "ok": true,
-      "aantal": 174
+      "aantal": 260
     },
     "boamp": {
       "ok": true,
-      "aantal": 273
+      "aantal": 347
     },
     "pmp_lu": {
       "ok": true,
-      "aantal": 6
+      "aantal": 9
     },
     "coming_up": {
       "ok": true,
       "aantal": 345
     }
   },
-  "nieuw": 15,
+  "nieuw": 76,
   "nieuw_per_profiel": {
-    "niet_gegund": 5,
-    "eenmalige_levering": 5,
-    "it_diensten": 2,
-    "consultancy": 3
+    "niet_gegund": 24,
+    "betalingen_incasso": 1,
+    "consultancy": 7,
+    "eenmalige_levering": 29,
+    "algemeen_drukwerk": 7,
+    "it_diensten": 13,
+    "transactioneel_drukwerk": 2
   }
 }
