@@ -1,37 +1,38 @@
 {
-  "tijdstip": "2026-11-24T06:46:06",
-  "van": "2026-11-22",
-  "tot": "2026-11-24",
+  "tijdstip": "2026-11-25T06:45:08",
+  "van": "2026-11-23",
+  "tot": "2026-11-25",
   "bronnen": {
     "ted": {
       "ok": true,
-      "aantal": 1043
+      "aantal": 1542
     },
     "tenderned": {
       "ok": true,
-      "aantal": 135
+      "aantal": 189
     },
     "boamp": {
       "ok": true,
-      "aantal": 185
+      "aantal": 377
     },
     "pmp_lu": {
       "ok": true,
-      "aantal": 9
+      "aantal": 7
     },
     "coming_up": {
       "ok": true,
-      "aantal": 343
+      "aantal": 344
     }
   },
-  "nieuw": 76,
+  "nieuw": 97,
   "nieuw_per_profiel": {
-    "consultancy": 7,
-    "niet_gegund": 28,
-    "algemeen_drukwerk": 6,
-    "transactioneel_drukwerk": 3,
-    "eenmalige_levering": 22,
-    "it_diensten": 12,
-    "ux_design": 2
+    "eenmalige_levering": 31,
+    "niet_gegund": 32,
+    "it_diensten": 15,
+    "algemeen_drukwerk": 11,
+    "betalingen_incasso": 3,
+    "consultancy": 10,
+    "transactioneel_drukwerk": 2,
+    "ux_design": 1
   }
 }
