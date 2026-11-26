@@ -42,6 +42,28 @@ jobs:
           git add data/aanbestedingen.db output/data.json output/laatste_run.json
           git commit -m "Run $(date -u +%Y-%m-%d)" || echo "Geen wijzigingen"
           git push
+      - name: Website bijwerken (tender-monitor)
+        if: env.SITE_TOKEN != ''
+        env:
+          SITE_TOKEN: ${{ secrets.SITE_TOKEN }}
+        run: |
+          git clone --depth 1 "https://x-access-token:${SITE_TOKEN}@github.com/ezravanharen-cmd/tender-monitor.git" site
+          cp output/data.json site/data.json
+          python - <<'PY'
+          h = open("dashboard.html", encoding="utf-8").read()
+          head = ('<!doctype html>\n<html lang="nl"><head><meta charset="utf-8">\n'
+                  '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
+                  '<meta name="robots" content="noindex,nofollow">\n'
+                  '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>\n'
+                  '</head><body>\n')
+          open("site/index.html", "w", encoding="utf-8").write(head + h + "\n</body></html>\n")
+          PY
+          cd site
+          git config user.name "aanbestedingsmonitor"
+          git config user.email "aanbestedingsmonitor@users.noreply.github.com"
+          git add -A
+          git commit -m "Update $(date +%Y-%m-%d)" || echo "Geen wijzigingen"
+          git push
       - name: Logboek
         if: always()
         uses: actions/upload-artifact@v4
