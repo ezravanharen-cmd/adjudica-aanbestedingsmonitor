@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TZ: Europe/Brussels
+      SITE_TOKEN: ${{ secrets.SITE_TOKEN }}
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
@@ -44,8 +45,6 @@ jobs:
           git push
       - name: Website bijwerken (tender-monitor)
         if: env.SITE_TOKEN != ''
-        env:
-          SITE_TOKEN: ${{ secrets.SITE_TOKEN }}
         run: |
           git clone --depth 1 "https://x-access-token:${SITE_TOKEN}@github.com/ezravanharen-cmd/tender-monitor.git" site
           cp output/data.json site/data.json
